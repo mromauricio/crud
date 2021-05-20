@@ -9,20 +9,19 @@ const port = 3001
 app.use(cors())
 app.use(bodyParser.json())
 
-
 app.get('/', (req, res) => {
   res.send('SOU O BACKEND')
 } )
 
 app.post('/', (req, res) => {
   console.log('REQ BODY RECEBIDO', req.body)
-  if (req.body) {
+  if (Object.keys(req.body).length !== 0) {
     res.status(201).send('Recebido com sucesso')
   }
   else {
-    res.status(400)
+    res.status(400).send()
   }
-} )
+})
 
 
 app.listen(port, () => {

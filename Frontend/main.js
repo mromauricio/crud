@@ -35,16 +35,32 @@ function validaFormulario () {
     toastr["error"]("Senha menor que 8 dígitos")
   }
   else {
-    const data = {
-      "nome": inputNome.value,
-      "email": inputEmail.value,
-      "senha": inputSenha.value
-    }
-    fetch('http://localhost:3001', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {'Content-Type': 'application/json'},
-    })
-      
+    enviarDados();
   }
+}
+
+function enviarDados(){
+  const data = {
+    "nome": inputNome.value,
+    "email": inputEmail.value,
+    "senha": inputSenha.value
+  }
+  fetch('http://localhost:3001', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {'Content-Type': 'application/json'},
+  }).then(response => {
+    if (response.status === 201) {
+      toastr["success"]("Dados encaminhados com sucesso!")
+      limpaFormulario()
+    }
+  }).catch((error) => {
+    toastr["error"]("Ocorreu problema!")
+  }) 
+}
+
+function limpaFormulario(){
+  inputNome.value = ''
+  inputEmail.value = ''
+  inputSenha.value = ''
 }
