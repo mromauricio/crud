@@ -17,25 +17,61 @@ toastr.options = {
 }
 
 const btn = document.querySelector("#botao")
-btn.addEventListener('click', () => validaFormulario())
+btn.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const inputNome = document.querySelector("#nome")
-const inputEmail = document.querySelector("#email")
-const inputSenha = document.querySelector("#senha")
+const labelNome = document.querySelector("#label-nome")
+inputNome.addEventListener('blur', () => validaFormulario('nome') )
 
-function validaFormulario () {
-  if (inputNome.value.trim().length == 0 ) {
-    toastr["error"]("Nome não pode ser em branco")
+const inputEmail = document.querySelector("#email")
+const labelEmail = document.querySelector("#label-email")
+inputEmail.addEventListener('blur', () => validaFormulario('email') )
+
+const inputSenha = document.querySelector("#senha")
+const labelSenha = document.querySelector("#label-senha")
+inputSenha.addEventListener('blur', () => validaFormulario('senha') )
+
+let existeErroNome, existeErroEmail, existeErroSenha = true
+function validaFormulario (campo) {
+  if (campo === 'nome') {
+    if (inputNome.value.trim().length == 0 ) {
+      labelNome.setAttribute('style', 'color: red')
+      existeErroNome = true
+    } else {
+      labelNome.removeAttribute('style')
+      existeErroNome = false
+    }
   }
-  if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(inputEmail.value))
-  {
-    toastr["error"]("Email inválido")
+  if (campo === 'email') {
+    if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(inputEmail.value) 
+    || inputEmail.value.trim().length == 0)
+    {
+      labelEmail.setAttribute('style', 'color: red')
+      existeErroEmail = true
+    } else {
+      labelEmail.removeAttribute('style')
+      existeErroEmail = false
+    }
   }
-  if (inputSenha.value.length <= 7){
-    toastr["error"]("Senha menor que 8 dígitos")
+  if (campo === 'senha') {
+    if (inputSenha.value.length <= 7){
+      labelSenha.setAttribute('style', 'color: red')
+      existeErroSenha = true
+    } else {
+      labelSenha.removeAttribute('style')
+      existeErroSenha = false
+    }
   }
-  else {
-    enviarDados();
+}
+
+function verificaTudoAntesDeEnviar() {
+  validaFormulario('nome')
+  validaFormulario('email')
+  validaFormulario('senha')
+  if (existeErroNome || existeErroEmail || existeErroSenha ) {
+    toastr["error"](`Corrija os campos em vermelho!`)
+  } else {
+    enviarDados()
   }
 }
 
@@ -55,7 +91,7 @@ function enviarDados(){
       limpaFormulario()
     }
   }).catch((error) => {
-    toastr["error"]("Ocorreu problema!")
+    toastr["error"]("Ooops! Algo deu errado!")
   }) 
 }
 
