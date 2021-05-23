@@ -16,12 +16,18 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
+
 const btn = document.querySelector("#botao")
 btn.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
 inputNome.addEventListener('blur', () => validaFormulario('nome') )
+
+const inputTelefone = document.querySelector("#telefone")
+const labelTelefone = document.querySelector("#label-telefone")
+inputTelefone.addEventListener('blur', () => validaFormulario('telefone') )
+
 
 const inputEmail = document.querySelector("#email")
 const labelEmail = document.querySelector("#label-email")
@@ -31,7 +37,7 @@ const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
 inputSenha.addEventListener('blur', () => validaFormulario('senha') )
 
-let existeErroNome, existeErroEmail, existeErroSenha = true
+let existeErroNome, existeErroTelefone,existeErroEmail, existeErroSenha = true
 function validaFormulario (campo) {
   if (campo === 'nome') {
     if (inputNome.value.trim().length == 0 ) {
@@ -42,6 +48,17 @@ function validaFormulario (campo) {
       existeErroNome = false
     }
   }
+
+  if (campo === 'telefone') {
+    if (inputTelefone.value.trim().length == 0 ) {
+      labelTelefone.setAttribute('style', 'color: red')
+      existeErroTelefone = true
+    } else {
+      labelTelefone.removeAttribute('style')
+      existeErroTelefone = false
+    }
+  }
+
   if (campo === 'email') {
     if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(inputEmail.value) 
     || inputEmail.value.trim().length == 0)
@@ -66,9 +83,11 @@ function validaFormulario (campo) {
 
 function verificaTudoAntesDeEnviar() {
   validaFormulario('nome')
+  validaFormulario('telefone')
   validaFormulario('email')
   validaFormulario('senha')
-  if (existeErroNome || existeErroEmail || existeErroSenha ) {
+  if (existeErroNome || existeErroTelefone ||
+   existeErroEmail || existeErroSenha)  {
     toastr["error"](`Corrija os campos em vermelho!`)
   } else {
     enviarDados()
@@ -78,6 +97,7 @@ function verificaTudoAntesDeEnviar() {
 function enviarDados(){
   const data = {
     "nome": inputNome.value,
+    "telefone": inputTelefone.value,
     "email": inputEmail.value,
     "senha": inputSenha.value
   }
@@ -97,6 +117,7 @@ function enviarDados(){
 
 function limpaFormulario(){
   inputNome.value = ''
+  inputTelefone.value = ''
   inputEmail.value = ''
   inputSenha.value = ''
 }
