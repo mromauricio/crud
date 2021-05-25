@@ -20,6 +20,9 @@ toastr.options = {
 const btn = document.querySelector("#botao")
 btn.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
+const btnListar = document.querySelector("#listar")
+btnListar.addEventListener('click', () => listaUsuariosCadastrados())
+
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
 inputNome.addEventListener('blur', () => validaFormulario('nome') )
@@ -120,4 +123,10 @@ function limpaFormulario(){
   inputTelefone.value = ''
   inputEmail.value = ''
   inputSenha.value = ''
+}
+
+function listaUsuariosCadastrados(){
+  fetch('http://localhost:3001')
+    .then(response => response.json())
+    .then(dado => console.log(dado))
 }
