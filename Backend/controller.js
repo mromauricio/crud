@@ -2,8 +2,13 @@ const express = require('express')
 const router = express.Router()
 const service = require('./service')
 
-router.get('/', (req, res) => {
-  res.send(JSON.stringify(service.buscaUsuarios()))
+router.get('/', async (req, res) => {
+  const retornoService = await service.buscaUsuarios()
+  if ( retornoService ) {
+    res.send(JSON.stringify(retornoService))
+  } else {
+    res.status(500).send()
+  }
 } )
 
 router.post('/', (req, res) => {

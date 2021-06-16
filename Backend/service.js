@@ -1,10 +1,10 @@
 const dao = require('./dao.js')
 
-exports.verificaBody =  (conteudoBody) => {
+exports.verificaBody = async (conteudoBody) => {
   if (isNaN(conteudoBody.telefone)){
     return false
   } else {
-    if ( dao.incluiUsuario(conteudoBody) ) {
+    if ( await dao.incluiUsuario(conteudoBody) ) {
       return true
     } else {
       return false
@@ -12,6 +12,10 @@ exports.verificaBody =  (conteudoBody) => {
   }
 }
 
-exports.buscaUsuarios = () => {
-  return dao.listaUsuarios()
+exports.buscaUsuarios = async () => {
+  let retornoDao = [];
+  retornoDao = await dao.listaUsuarios()
+  return retornoDao
 }
+
+

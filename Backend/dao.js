@@ -1,21 +1,3 @@
-let bancoDados = [];
-
-// exports.incluiUsuario = (dados) => {
-//   const tamanhoBancoDadosAntesPush = bancoDados.length
-//   bancoDados.push(dados);
-//   if ( bancoDados.length > tamanhoBancoDadosAntesPush) {
-//     console.log('ESTOU NO DAO', bancoDados)
-//     return true
-//   } else {
-//     return false
-//   }
-// }
-
-
-exports.listaUsuarios = () => {
-  return bancoDados
-}
-
 const { Pool } = require('pg')
 
 const pool = new Pool({
@@ -26,20 +8,30 @@ const pool = new Pool({
   port: 5432
 })
 
-// pool
-//   .query('SELECT * from usuario')
-//   .then(res => console.log(res.rows))
-//   .catch(e => console.error(e.stack))
-
 exports.incluiUsuario = (dados) => {
   const text = 'INSERT INTO usuario (name, email, phone, password) VALUES($1, $2, $3, $4) RETURNING *'
   const values = [dados.nome, dados.email, dados.telefone, dados.senha]  
   pool
-  .query(text, values)
-  .then(res => {
-    console.log(res.rows)
+    .query(text, values)
+    .then(res => {
+      return true
+    })
+    .catch(e => {
+      console.error(e.stack)
+      return false
+    })
+    .finally(() => {
+      pool.end()
+      console.log('FECHEI CONEXÃO COM BD')
+    })  
+}
+
+exports.listaUsuarios = async () => {
+  const select = 'SELECT * FROM usuario ORDER BY id ASC'
+  const dados = await pool.query({
+    text: select
   })
-  .catch(e => console.error(e.stack))  
+  return dados.rows
 }
 
 
