@@ -13,9 +13,13 @@ exports.verificaBody = async (conteudoBody) => {
 }
 
 exports.buscaUsuarios = async () => {
-  let retornoDao = [];
-  retornoDao = await dao.listaUsuarios()
+  const retornoDao = await dao.listaUsuarios()
   return retornoDao
 }
+
+// exports.buscaUsuarios = async () => {
+//   const retornoDao = await dao.listaUsuariosPorNome('L')
+//   return retornoDao
+// }
 
 

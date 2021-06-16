@@ -128,5 +128,61 @@ function limpaFormulario(){
 function listaUsuariosCadastrados(){
   fetch('http://localhost:3001')
     .then(response => response.json())
-    .then(dado => console.log(dado))
+    .then(dado => {
+      console.log(dado)
+      montarTabela(dado)
+    })
+    .catch((error) => {
+      toastr["error"]("Ooops! Algo deu errado!")
+    }) 
+}
+
+const tbody = document.querySelector("#tableBody")
+
+function montarTabela(dado) {
+  for (i = 0; i < dado.length; i++) {
+    const tr = document.createElement('tr')
+    
+    const th = document.createElement('th')
+    th.setAttribute('scope','row')
+    th.textContent = dado[i].id
+
+    const td1 = document.createElement('td')
+    td1.textContent = dado[i].name
+
+    const td2 = document.createElement('td')
+    td2.textContent = dado[i].phone
+
+    const td3 = document.createElement('td')
+    td3.textContent = dado[i].email
+
+    tbody.appendChild(tr)
+    tr.appendChild(th)
+    tr.appendChild(td1)
+    tr.appendChild(td2)
+    tr.appendChild(td3)
+  }
+
+
+    // const tr = document.createElement('tr')
+    
+    // const th = document.createElement('th')
+    // th.setAttribute('scope','row')
+    // th.textContent = '123'
+
+    // const td1 = document.createElement('td')
+    // td1.textContent = 'Mauricio'
+
+    // const td2 = document.createElement('td')
+    // td2.textContent = '(21)97538-6601'
+
+    // const td3 = document.createElement('td')
+    // td3.textContent = 'mro@gmail.com'
+
+    
+    // tbody.appendChild(tr)
+    // tr.appendChild(th)
+    // tr.appendChild(td1)
+    // tr.appendChild(td2)
+    // tr.appendChild(td3)
 }
