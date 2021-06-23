@@ -17,11 +17,11 @@ toastr.options = {
 }
 
 
-const btn = document.querySelector("#botao")
-btn.addEventListener('click', () => verificaTudoAntesDeEnviar())
+const btnIncluir = document.querySelector("#botao")
+btnIncluir.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const btnListar = document.querySelector("#listar")
-btnListar.addEventListener('click', () => listaUsuariosCadastrados())
+btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value))
 
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
@@ -31,7 +31,6 @@ const inputTelefone = document.querySelector("#telefone")
 const labelTelefone = document.querySelector("#label-telefone")
 inputTelefone.addEventListener('blur', () => validaFormulario('telefone') )
 
-
 const inputEmail = document.querySelector("#email")
 const labelEmail = document.querySelector("#label-email")
 inputEmail.addEventListener('blur', () => validaFormulario('email') )
@@ -40,7 +39,10 @@ const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
 inputSenha.addEventListener('blur', () => validaFormulario('senha') )
 
-let existeErroNome, existeErroTelefone,existeErroEmail, existeErroSenha = true
+limpaFormulario()
+
+let existeErroNome, existeErroTelefone, existeErroEmail, existeErroSenha = true
+
 function validaFormulario (campo) {
   if (campo === 'nome') {
     if (inputNome.value.trim().length == 0 ) {
@@ -82,6 +84,18 @@ function validaFormulario (campo) {
       existeErroSenha = false
     }
   }
+  verificarBotãoIncluir()
+}
+
+function verificarBotãoIncluir() {
+  if (existeErroNome || existeErroTelefone ||
+    existeErroEmail || existeErroSenha)  {
+      btnIncluir.setAttribute('class', 'btn btn-outline-secondary')
+      btnIncluir.setAttribute('disabled', '')
+    } else {
+      btnIncluir.removeAttribute('disabled')
+      btnIncluir.setAttribute('class', 'btn btn-outline-primary')
+    } 
 }
 
 function verificaTudoAntesDeEnviar() {
@@ -97,26 +111,52 @@ function verificaTudoAntesDeEnviar() {
   }
 }
 
-function enviarDados(){
-  const data = {
+function enviarDados() {
+  const usuarioPayload = {
     "nome": inputNome.value,
     "telefone": inputTelefone.value,
     "email": inputEmail.value,
     "senha": inputSenha.value
   }
-  fetch('http://localhost:3001', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {'Content-Type': 'application/json'},
-  }).then(response => {
+  axios.post('http://localhost:3001/usuarios', usuarioPayload)
+    .then(response => {
+    console.log(response.data)
     if (response.status === 201) {
-      toastr["success"]("Dados encaminhados com sucesso!")
+      toastr["success"]("Dados salvos com sucesso!")
       limpaFormulario()
+    } else {
+      toastr["error"]("Ooops! Algo deu errado!")
     }
   }).catch((error) => {
     toastr["error"]("Ooops! Algo deu errado!")
   }) 
 }
+
+// function enviarDados() {
+//   const usuarioPayload = {
+//     "nome": inputNome.value,
+//     "telefone": inputTelefone.value,
+//     "email": inputEmail.value,
+//     "senha": inputSenha.value
+//   }
+//   fetch('http://localhost:3001/usuarios', 
+//     {
+//       method: 'POST',
+//       body: JSON.stringify(usuarioPayload),
+//       headers: {'Content-Type': 'application/json'},
+//     }
+//   ).then(response => {
+//     console.log(response)
+//     if (response.status === 201) {
+//       toastr["success"]("Dados salvos com sucesso!")
+//       limpaFormulario()
+//     } else {
+//       toastr["error"]("Ooops! Algo deu errado!")
+//     }
+//   }).catch((error) => {
+//     toastr["error"]("Ooops! Algo deu errado!")
+//   }) 
+// }
 
 function limpaFormulario(){
   inputNome.value = ''
@@ -125,42 +165,49 @@ function limpaFormulario(){
   inputSenha.value = ''
 }
 
-function listaUsuariosCadastrados(){
-  fetch('http://localhost:3001')
-    .then(response => response.json())
-    .then(dado => {
-      console.log(dado)
-      montarTabela(dado)
+function listaUsuariosCadastrados(inputNome, inputEmail) {
+  axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}`)
+    .then(response => {
+      montarTabela(response.data)
     })
     .catch((error) => {
       toastr["error"]("Ooops! Algo deu errado!")
     }) 
 }
 
+// function listaUsuariosCadastrados() {
+//   fetch('http://localhost:3001/usuarios')
+//     .then(response => response.json())
+//     .then(dado => {
+//       montarTabela(dado)
+//     })
+//     .catch((error) => {
+//       toastr["error"]("Ooops! Algo deu errado!")
+//     }) 
+// }
+
 const tbody = document.querySelector("#tableBody")
 
 function montarTabela(dado) {
   for (i = 0; i < dado.length; i++) {
     const tr = document.createElement('tr')
+    if ( i%2 !== 0 ){
+      tr.setAttribute('class', 'pure-table-odd')
+    }
     
-    const th = document.createElement('th')
-    th.setAttribute('scope','row')
-    th.textContent = dado[i].id
+    const td = document.createElement('td')
+    td.textContent = dado[i].name
 
     const td1 = document.createElement('td')
-    td1.textContent = dado[i].name
+    td1.textContent = dado[i].phone
 
     const td2 = document.createElement('td')
-    td2.textContent = dado[i].phone
-
-    const td3 = document.createElement('td')
-    td3.textContent = dado[i].email
+    td2.textContent = dado[i].email
 
     tbody.appendChild(tr)
-    tr.appendChild(th)
+    tr.appendChild(td)
     tr.appendChild(td1)
     tr.appendChild(td2)
-    tr.appendChild(td3)
   }
 
 

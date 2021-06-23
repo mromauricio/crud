@@ -1,25 +1,16 @@
 const dao = require('./dao.js')
 
-exports.verificaBody = async (conteudoBody) => {
-  if (isNaN(conteudoBody.telefone)){
-    return false
-  } else {
-    if ( await dao.incluiUsuario(conteudoBody) ) {
-      return true
-    } else {
-      return false
-    }
-  }
+exports.insereUsuario = async (conteudoBody) => {
+    conteudoBody.email = conteudoBody.email.toLowerCase() 
+    return await dao.incluiUsuario(conteudoBody)
 }
 
-exports.buscaUsuarios = async () => {
-  const retornoDao = await dao.listaUsuarios()
+exports.buscaUsuarios = async (nome, email) => {
+  let retornoDao;
+  if (nome || email) {
+    retornoDao = await dao.listaUsuariosNomeEmail(nome, email)
+  } else {
+    retornoDao = await dao.listaUsuarios()
+  }
   return retornoDao
 }
-
-// exports.buscaUsuarios = async () => {
-//   const retornoDao = await dao.listaUsuariosPorNome('L')
-//   return retornoDao
-// }
-
-
