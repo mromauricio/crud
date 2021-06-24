@@ -27,28 +27,13 @@ exports.incluiUsuario = async (dados) => {
   }
 }
 
-exports.listaUsuarios = async () => {
-  const client = await pool.connect()
-  const command = 'SELECT * FROM usuario ORDER BY LOWER(name) ASC'
-  try {
-    const resultado = await client.query(command)
-    return resultado.rows
-  }
-  catch (error) {
-    console.log (error)
-    return false
-  }
-  finally {
-    client.release()
-  }
-}
 
-exports.listaUsuariosNomeEmail = async (nome, email) => {
+exports.listaUsuariosFiltro = async (nome, email, tel) => {
   const client = await pool.connect()
-  const command = 'SELECT * FROM usuario WHERE lower(name) LIKE $1 ORDER BY LOWER(name) ASC'
-  const values = [`${nome.toLowerCase()}%`]
+  const command = 'SELECT * FROM usuario WHERE lower(name) LIKE $1 AND lower(email) LIKE $2 AND phone LIKE $3  ORDER BY LOWER(name) ASC'
+  const values = [`${nome.toLowerCase().replace('*','%')}%`, `${email.toLowerCase().replace('*','%')}%`, `${tel.replace('*','%')}%`]
   try {
-    const resultado = await client.query(command, values)
+    let resultado = await client.query(command, values)
     return resultado.rows
   }
   catch (error) {

@@ -5,12 +5,6 @@ exports.insereUsuario = async (conteudoBody) => {
     return await dao.incluiUsuario(conteudoBody)
 }
 
-exports.buscaUsuarios = async (nome, email) => {
-  let retornoDao;
-  if (nome || email) {
-    retornoDao = await dao.listaUsuariosNomeEmail(nome, email)
-  } else {
-    retornoDao = await dao.listaUsuarios()
-  }
-  return retornoDao
+exports.buscaUsuarios = async (nome, email, tel) => {
+ return await dao.listaUsuariosFiltro(nome, email, tel)
 }

@@ -1,3 +1,4 @@
+
 toastr.options = {
   "closeButton": false,
   "debug": false,
@@ -21,7 +22,8 @@ const btnIncluir = document.querySelector("#botao")
 btnIncluir.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const btnListar = document.querySelector("#listar")
-btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value))
+btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value, inputTelefone.value))
+
 
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
@@ -165,9 +167,10 @@ function limpaFormulario(){
   inputSenha.value = ''
 }
 
-function listaUsuariosCadastrados(inputNome, inputEmail) {
-  axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}`)
-    .then(response => {
+function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone) {
+  axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
+    .then( response => {
+      toastr["info"](`Foram encontrados ${response.data.length} registros`)
       montarTabela(response.data)
     })
     .catch((error) => {
@@ -186,9 +189,16 @@ function listaUsuariosCadastrados(inputNome, inputEmail) {
 //     }) 
 // }
 
-const tbody = document.querySelector("#tableBody")
+const table = document.querySelector('table')
 
 function montarTabela(dado) {
+
+  document.querySelector('tbody').remove()
+
+  const tbody = document.createElement('tbody')
+  table.appendChild(tbody)
+
+
   for (i = 0; i < dado.length; i++) {
     const tr = document.createElement('tr')
     if ( i%2 !== 0 ){

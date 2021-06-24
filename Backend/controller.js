@@ -3,7 +3,7 @@ const router = express.Router()
 const service = require('./service')
 
 router.get('/usuarios', async (req, res) => {
-  const retornoService = await service.buscaUsuarios(req.query.nome, req.query.email)
+  const retornoService = await service.buscaUsuarios(req.query.nome, req.query.email, req.query.tel)
   if ( retornoService ) {
     res.send(JSON.stringify(retornoService))
   } else {
