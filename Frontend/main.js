@@ -170,7 +170,11 @@ function limpaFormulario(){
 function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone) {
   axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
     .then( response => {
-      toastr["info"](`Foram encontrados ${response.data.length} registros`)
+      if (response.data.length === 0) {
+        toastr["warning"](`Não existem registros com esta combinação`)
+      } else {
+        toastr["info"](`Foram encontrados ${response.data.length} registros`)
+      }
       montarTabela(response.data)
     })
     .catch((error) => {
@@ -193,7 +197,7 @@ const table = document.querySelector('table')
 
 function montarTabela(dado) {
 
-  document.querySelector('tbody').remove()
+  document.querySelector('tbody').remove()  //! Quando não existe tbody dá CHABU
 
   const tbody = document.createElement('tbody')
   table.appendChild(tbody)
