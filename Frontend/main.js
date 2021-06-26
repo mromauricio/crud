@@ -39,7 +39,7 @@ inputEmail.addEventListener('blur', () => validaFormulario('email') )
 
 const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
-inputSenha.addEventListener('blur', () => validaFormulario('senha') )
+inputSenha.addEventListener('onkeypress', () => validaFormulario('senha') )
 
 limpaFormulario()
 
@@ -198,7 +198,6 @@ const table = document.querySelector('table')
 function montarTabela(dado) {
 
   document.querySelector('tbody').remove()  //! Quando não existe tbody dá CHABU
-
   const tbody = document.createElement('tbody')
   table.appendChild(tbody)
 
@@ -222,6 +221,11 @@ function montarTabela(dado) {
     tr.appendChild(td)
     tr.appendChild(td1)
     tr.appendChild(td2)
+    // <tbody>
+    //   <tr>
+    //     <td>
+    //     <td1>
+    //     <td2>
   }
 
 

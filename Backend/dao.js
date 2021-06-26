@@ -31,7 +31,7 @@ exports.incluiUsuario = async (dados) => {
 exports.listaUsuariosFiltro = async (nome, email, tel) => {
   const client = await pool.connect()
   const command = 'SELECT * FROM usuario WHERE lower(name) LIKE $1 AND lower(email) LIKE $2 AND phone LIKE $3  ORDER BY LOWER(name) ASC'
-  const values = [`${nome.toLowerCase().replace('*','%')}%`, `${email.toLowerCase().replace('*','%')}%`, `${tel.replace('*','%')}%`]
+  const values = [`${nome.toLowerCase()}`, `${email.toLowerCase()}`, `${tel}`]
   try {
     let resultado = await client.query(command, values)
     return resultado.rows
@@ -44,6 +44,4 @@ exports.listaUsuariosFiltro = async (nome, email, tel) => {
     client.release()
   }
 }
-
-
 
