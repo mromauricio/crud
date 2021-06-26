@@ -6,7 +6,7 @@ exports.insereUsuario = async (conteudoBody) => {
 }
 
 exports.buscaUsuarios = async (nome, email, tel) => {
-    
+
     nome =  nome.includes('*') ?  nome.replace(/\*/g,'%') : `%${nome}%`
     // if ( nome.includes('*') ) {
     //     nome = nome.replace(/\*/g,'%') 
@@ -16,6 +16,7 @@ exports.buscaUsuarios = async (nome, email, tel) => {
 
     email =  email.includes('*') ?  email.replace(/\*/g,'%') : `%${email}%`
     tel =  tel.includes('*') ?  tel.replace(/\*/g,'%') : `%${tel}%`
+    
  return await dao.listaUsuariosFiltro(nome, email, tel)
 }
 

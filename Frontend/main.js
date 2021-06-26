@@ -39,7 +39,7 @@ inputEmail.addEventListener('blur', () => validaFormulario('email') )
 
 const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
-inputSenha.addEventListener('onkeypress', () => validaFormulario('senha') )
+inputSenha.addEventListener('blur', () => validaFormulario('senha') )
 
 limpaFormulario()
 
