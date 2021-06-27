@@ -1,7 +1,7 @@
 //? MONGODB ATLAS - CLOUD NOSQL 
 
 const mongoose = require('mongoose');
-const uri = "mongodb+srv://mromauricioDB:PWDmromauricioDB@cluster0.hufxi.gcp.mongodb.net/crud?retryWrites=true&w=majority"
+const uri = "mongodb+srv://mromauricioDB:XXX@cluster0.hufxi.gcp.mongodb.net/crud?retryWrites=true&w=majority"
 
 mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true});
 const db = mongoose.connection;
