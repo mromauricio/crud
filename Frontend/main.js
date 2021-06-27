@@ -17,13 +17,15 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
+$(document).ready(function () { 
+  $('#telefone').mask('(00) 00000-0000', {reverse: false});
+});
 
 const btnIncluir = document.querySelector("#botao")
 btnIncluir.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const btnListar = document.querySelector("#listar")
 btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value, inputTelefone.value))
-
 
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
@@ -40,6 +42,13 @@ inputEmail.addEventListener('blur', () => validaFormulario('email') )
 const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
 inputSenha.addEventListener('blur', () => validaFormulario('senha') )
+
+function limpaFormulario(){
+  inputNome.value = ''
+  inputTelefone.value = ''
+  inputEmail.value = ''
+  inputSenha.value = ''
+}
 
 limpaFormulario()
 
@@ -160,20 +169,15 @@ function enviarDados() {
 //   }) 
 // }
 
-function limpaFormulario(){
-  inputNome.value = ''
-  inputTelefone.value = ''
-  inputEmail.value = ''
-  inputSenha.value = ''
-}
-
 function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone) {
   axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
     .then( response => {
       if (response.data.length === 0) {
-        toastr["warning"](`Não existem registros com esta combinação`)
+        toastr["warning"](`Não existem usuários com esta combinação`)
+      } else if (response.data.length === 1) {
+        toastr["info"](`Foi encontrado 1 usuário`)
       } else {
-        toastr["info"](`Foram encontrados ${response.data.length} registros`)
+        toastr["info"](`Foram encontrados ${response.data.length} usuários`)
       }
       montarTabela(response.data)
     })
@@ -197,7 +201,7 @@ const table = document.querySelector('table')
 
 function montarTabela(dado) {
 
-  document.querySelector('tbody').remove()  //! Quando não existe tbody dá CHABU
+  document.querySelector('tbody')?.remove()  //! FALAR SOBRE " ? "
   const tbody = document.createElement('tbody')
   table.appendChild(tbody)
 
@@ -227,27 +231,4 @@ function montarTabela(dado) {
     //     <td1>
     //     <td2>
   }
-
-
-    // const tr = document.createElement('tr')
-    
-    // const th = document.createElement('th')
-    // th.setAttribute('scope','row')
-    // th.textContent = '123'
-
-    // const td1 = document.createElement('td')
-    // td1.textContent = 'Mauricio'
-
-    // const td2 = document.createElement('td')
-    // td2.textContent = '(21)97538-6601'
-
-    // const td3 = document.createElement('td')
-    // td3.textContent = 'mro@gmail.com'
-
-    
-    // tbody.appendChild(tr)
-    // tr.appendChild(th)
-    // tr.appendChild(td1)
-    // tr.appendChild(td2)
-    // tr.appendChild(td3)
 }

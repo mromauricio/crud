@@ -1,4 +1,5 @@
 const dao = require('./dao.js')
+// const dao = require('./daoMongodb.js')
 
 exports.insereUsuario = async (conteudoBody) => {
     conteudoBody.email = conteudoBody.email.toLowerCase() 
@@ -17,7 +18,11 @@ exports.buscaUsuarios = async (nome, email, tel) => {
     email =  email.includes('*') ?  email.replace(/\*/g,'%') : `%${email}%`
     tel =  tel.includes('*') ?  tel.replace(/\*/g,'%') : `%${tel}%`
     
- return await dao.listaUsuariosFiltro(nome, email, tel)
+    return await dao.listaUsuariosFiltro(nome, email, tel)
 }
+
+// exports.buscaUsuarios = async (nome, email, tel) => {
+//     return await dao.listaUsuariosFiltro(nome, email, tel)
+// }
 
 

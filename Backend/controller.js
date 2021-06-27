@@ -9,7 +9,7 @@ router.get('/usuarios', async (req, res) => {
   } else {
     res.status(500).send()
   }
-} )
+})
 
 router.post('/usuarios', async (req, res) => {
   if ( await service.insereUsuario(req.body) ) {
