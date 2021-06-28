@@ -47,12 +47,19 @@ usuarios.createIndex( { name: "text" } )
 //! Busca com acento somente traz com acento
 //'.*star wars.*'
 exports.listaUsuariosFiltro = async (nome, email, tel) => {
+  let queryName
+  if (nome) {
+    queryName = { $text: {$search: `.*${nome}.*`, $caseSensitive: false, $diacriticSensitive: false }} // tem que preencher a palavra completa. Não traz quando vazio
+  } else {
+    queryName = {name: {$regex: `.*${diacriticSensitiveRegex(nome)}.*` , $options: 'i'} }  // busca em qq parte. Se preencher com acento, busca somente com acento 
+  }
   let resultado = [];
   try{
     await usuarios.find( { $and:[
-      { $text: {$search: nome, $caseSensitive: false, $diacriticSensitive: false }}, // tem que preencher a palavra completa. Não traz quando vazio
-      // {name: {$regex: diacriticSensitiveRegex(nome), $options: 'i'} },   // sem preencher sem acento, busca com e sem acento, mas não em qq parte. Se preencher com acento, busca somente com acento 
-      // {name: {$regex: `.*${nome}.*` , $options: 'i'} },  // busca em qq parte  mas distingue acento
+      // { name: new RegExp(`^${nome}$`, 'i') },
+      // { name: { $regex: new RegExp(`^${nome}$`, 'i') } };
+      // { name: { $regex: new RegExp(`^${nome}$`), $options: 'i' } },
+      queryName,      
       {email: {$regex: email, $options: 'i'} },
       {phone: {$regex: tel, $options: 'i'} }
     ]})

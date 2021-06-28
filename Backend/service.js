@@ -1,5 +1,5 @@
 const dao = require('./dao.js')
-// const dao = require('./daoMongodb.js')
+// const dao = require('./daoMongodb.js') //? Exclusivo para MongoDB
 
 exports.insereUsuario = async (conteudoBody) => {
     conteudoBody.email = conteudoBody.email.toLowerCase() 
@@ -14,13 +14,13 @@ exports.buscaUsuarios = async (nome, email, tel) => {
     // } else {
     //     nome = `%${nome}%`
     // }
-
     email =  email.includes('*') ?  email.replace(/\*/g,'%') : `%${email}%`
     tel =  tel.includes('*') ?  tel.replace(/\*/g,'%') : `%${tel}%`
     
     return await dao.listaUsuariosFiltro(nome, email, tel)
 }
 
+//? Exclusivo para MongoDB
 // exports.buscaUsuarios = async (nome, email, tel) => {
 //     return await dao.listaUsuariosFiltro(nome, email, tel)
 // }
