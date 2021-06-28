@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+
 const { json } = bodyParser
 const app = express()
 const port = 3001

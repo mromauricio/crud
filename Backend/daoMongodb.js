@@ -1,7 +1,7 @@
 //? MONGODB ATLAS - CLOUD NOSQL 
-
+require('dotenv').config()
 const mongoose = require('mongoose');
-const uri = "mongodb+srv://mromauricioDB:XXX@cluster0.hufxi.gcp.mongodb.net/crud?retryWrites=true&w=majority"
+const uri = process.env.mongoDbUri
 
 mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true});
 const db = mongoose.connection;
