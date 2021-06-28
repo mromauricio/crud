@@ -1,11 +1,13 @@
+require('dotenv').config()
+
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  user: 'mauriciooliveira',
-  host: 'localhost',
-  database: 'mauriciooliveira',
-  password: '',
-  port: 5432
+  user: process.env.pg_user,
+  host: process.env.pg_host,
+  database: process.env.pg_database,
+  password: process.env.pg_password,
+  port: process.env.pg_port
 })
 
 const verifyConnecion = async () => {

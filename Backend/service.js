@@ -1,5 +1,5 @@
-// const dao = require('./dao.js')
-const dao = require('./daoMongodb.js')
+const dao = require('./dao.js')
+// const dao = require('./daoMongodb.js')
 
 exports.insereUsuario = async (conteudoBody) => {
     conteudoBody.email = conteudoBody.email.toLowerCase() 
