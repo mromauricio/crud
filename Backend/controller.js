@@ -20,4 +20,12 @@ router.post('/usuarios', async (req, res) => {
   }
 })
 
+router.put('/usuarios/:codigo', async (req, res) => {
+  if ( await service.alteraUsuario(req.body, req.params.codigo) ) {
+    res.status(200).send()
+  } else {
+    res.status(500).send()
+  }
+})
+
 module.exports = router

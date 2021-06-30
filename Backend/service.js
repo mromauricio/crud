@@ -6,6 +6,11 @@ exports.insereUsuario = async (conteudoBody) => {
     return await dao.incluiUsuario(conteudoBody)
 }
 
+exports.alteraUsuario = async (conteudoBody, id) => {
+    conteudoBody.email = conteudoBody.email.toLowerCase() 
+    return await dao.alteraUsuario(conteudoBody, id)
+}
+
 exports.buscaUsuarios = async (nome, email, tel) => {
 
     nome =  nome.includes('*') ?  nome.replace(/\*/g,'%') : `%${nome}%`

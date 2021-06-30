@@ -42,6 +42,26 @@ exports.incluiUsuario = async (dados) => {
   }
 }
 
+
+exports.alteraUsuario = async (dados, idUsuario) => {
+  const client = await pool.connect()
+  const command = 'UPDATE usuario SET name = $1, email = $2, phone = $3, password = $4 WHERE id = $5'
+  const values = [dados.nome, dados.email, dados.telefone, dados.senha, idUsuario]  
+  try {
+    const resultado = await client.query(command, values)
+    if (resultado.rowCount === 1) {
+      return true
+    } else return false
+  }
+  catch (error) {
+    console.log (error)
+    return false
+  }
+  finally {
+    client.release()
+  }
+}
+
 function minusculoSemAcento (texto) {
   return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
 }

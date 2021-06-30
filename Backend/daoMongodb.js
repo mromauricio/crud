@@ -3,7 +3,7 @@ require('dotenv').config()
 const mongoose = require('mongoose');
 const uri = process.env.mongoDbUri
 
-mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true});
+mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true, useCreateIndex: true});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {console.log("Successful connection on MongoDB");});
@@ -13,7 +13,7 @@ const Schema = mongoose.Schema;
 const Usuario = mongoose.model('Usuario', Schema({
   name:  {type:  String, required: true, maxlength: 240},
   phone: {type:  String, required: true, maxlength: 30},
-  email: {type:  String, required: true, maxlength: 100},
+  email: {type:  String, required: true, maxlength: 100, unique: true},
   password: {type:  String, required: true, maxlength: 30},
 }));
 
@@ -51,7 +51,7 @@ exports.listaUsuariosFiltro = async (nome, email, tel) => {
   if (nome) {
     queryName = { $text: {$search: `.*${nome}.*`, $caseSensitive: false, $diacriticSensitive: false }} // tem que preencher a palavra completa. Não traz quando vazio
   } else {
-    queryName = {name: {$regex: `.*${diacriticSensitiveRegex(nome)}.*` , $options: 'i'} }  // busca em qq parte. Se preencher com acento, busca somente com acento 
+    queryName = {name: {$regex: `.*${(nome)}.*` , $options: 'i'} }  // busca em qq parte. Se preencher com acento, busca somente com acento 
   }
   let resultado = [];
   try{

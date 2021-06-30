@@ -21,11 +21,24 @@ $(document).ready(function () {
   $('#telefone').mask('(00) 00000-0000', {reverse: false});
 });
 
+let idUsuarioAlteracao = 0;
+
 const btnIncluir = document.querySelector("#botao")
 btnIncluir.addEventListener('click', () => verificaTudoAntesDeEnviar())
 
 const btnListar = document.querySelector("#listar")
-btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value, inputTelefone.value))
+btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.value, inputEmail.value, inputTelefone.value, false))
+
+const btnAlterar = document.querySelector("#alterar")
+btnAlterar.addEventListener('click', () => alteraUsuarioCadastrado(inputNome.value, inputEmail.value, inputTelefone.value, inputSenha.value))
+
+
+const inputEmail = document.querySelector("#email")
+const labelEmail = document.querySelector("#label-email")
+inputEmail.addEventListener('blur', () => {
+          validaFormulario('email') 
+          listaUsuariosCadastrados('',inputEmail.value,'', true)
+        })
 
 const inputNome = document.querySelector("#nome")
 const labelNome = document.querySelector("#label-nome")
@@ -34,10 +47,6 @@ inputNome.addEventListener('blur', () => validaFormulario('nome') )
 const inputTelefone = document.querySelector("#telefone")
 const labelTelefone = document.querySelector("#label-telefone")
 inputTelefone.addEventListener('blur', () => validaFormulario('telefone') )
-
-const inputEmail = document.querySelector("#email")
-const labelEmail = document.querySelector("#label-email")
-inputEmail.addEventListener('blur', () => validaFormulario('email') )
 
 const inputSenha = document.querySelector("#senha")
 const labelSenha = document.querySelector("#label-senha")
@@ -169,7 +178,7 @@ function enviarDados() {
 //   }) 
 // }
 
-function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone) {
+function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone, exibeSomenteFormulario) {
   axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
     .then( response => {
       if (response.data.length === 0) {
@@ -179,13 +188,46 @@ function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone) {
       } else {
         toastr["info"](`Foram encontrados ${response.data.length} usuários`)
       }
-      montarTabela(response.data)
+      if (exibeSomenteFormulario) {
+        preencheFormulario(response.data)
+      } else {
+        montarTabela(response.data)
+      }
     })
     .catch((error) => {
       toastr["error"]("Ooops! Algo deu errado!")
     }) 
 }
 
+
+function preencheFormulario (usuario) {
+  if (usuario.length === 1) {
+    inputNome.value = usuario[0].name
+    inputTelefone.value = usuario[0].phone
+    inputSenha.value = usuario[0].password
+    btnAlterar.removeAttribute('disabled')
+    btnAlterar.setAttribute('class', 'btn btn-outline-primary')
+    idUsuarioAlteracao = usuario[0].id
+  }
+}
+
+function alteraUsuarioCadastrado (nome, email, telefone, senha) {
+  const usuarioPayload = {
+    "nome": inputNome.value,
+    "telefone": inputTelefone.value,
+    "email": inputEmail.value,
+    "senha": inputSenha.value
+  }
+  axios.put(`http://localhost:3001/usuarios/${idUsuarioAlteracao}` , usuarioPayload)
+  .then(response => {
+    if (response.status === 200) {
+      toastr["success"]("Dados alterados com sucesso!")
+      limpaFormulario()
+    } else {
+      toastr["error"]("Ooops! Algo deu errado!")
+    }
+  })
+}
 // function listaUsuariosCadastrados() {
 //   fetch('http://localhost:3001/usuarios')
 //     .then(response => response.json())
