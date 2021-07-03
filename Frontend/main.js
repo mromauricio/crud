@@ -181,16 +181,16 @@ function enviarDados() {
 function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone, exibeSomenteFormulario) {
   axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
     .then( response => {
-      if (response.data.length === 0) {
-        toastr["warning"](`Não existem usuários com esta combinação`)
-      } else if (response.data.length === 1) {
-        toastr["info"](`Foi encontrado 1 usuário`)
-      } else {
-        toastr["info"](`Foram encontrados ${response.data.length} usuários`)
-      }
       if (exibeSomenteFormulario) {
         preencheFormulario(response.data)
       } else {
+        if (response.data.length === 0 ) {
+          toastr["warning"](`Não existem usuários com esta combinação`)
+        } else if (response.data.length === 1) {
+          toastr["info"](`Foi encontrado 1 usuário`)
+        } else {
+          toastr["info"](`Foram encontrados ${response.data.length} usuários`)
+        }
         montarTabela(response.data)
       }
     })
