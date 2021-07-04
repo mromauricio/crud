@@ -44,31 +44,20 @@ function diacriticSensitiveRegex(string = '') {
 usuarios.createIndex( { name: "text" } )
 
 //! Lembrar de tirar replace do SERVICE
-//! Busca com acento somente traz com acento
-//'.*star wars.*'
 exports.listaUsuariosFiltro = async (nome, email, tel) => {
   let queryName
   if (nome) {
     queryName = { $text: {$search: `.*${nome}.*`, $caseSensitive: false, $diacriticSensitive: false }} // tem que preencher a palavra completa. Não traz quando vazio
   } else {
-    queryName = {name: {$regex: `.*${(nome)}.*` , $options: 'i'} }  // busca em qq parte. Se preencher com acento, busca somente com acento 
+    queryName = {name: {$regex: `.*${(nome)}.*` , $options: 'i'} }  // para trazer todos os nomes
   }
   let resultado = [];
   try{
     await usuarios.find( { $and:[
-      // { name: new RegExp(`^${nome}$`, 'i') },
-      // { name: { $regex: new RegExp(`^${nome}$`, 'i') } };
-      // { name: { $regex: new RegExp(`^${nome}$`), $options: 'i' } },
       queryName,      
       {email: {$regex: email, $options: 'i'} },
       {phone: {$regex: tel, $options: 'i'} }
     ]})
-    //  .collation( { locale: 'pt', strength: 1 } )
-    //! Falta tratar acentuação
-    // { $or:[
-    //   {name: {$regex: nome, $options: 'i'} },
-    //   {name: query.normalize('NFD').replace(/[\u0300-\u036f]/g, "") }
-    //   ]}
       .forEach(row => resultado.push(row))
   }
   catch (error) {
