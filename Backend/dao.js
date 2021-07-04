@@ -10,7 +10,7 @@ const pool = new Pool({
   port: process.env.pg_port
 })
 
-const verifyConnecion = async () => {
+const verifyConnection = async () => {
   try{
     client = await pool.connect()
     console.log('Successful connection on PostgreSQL')
@@ -21,7 +21,7 @@ const verifyConnecion = async () => {
   }
 }
 
-verifyConnecion()
+verifyConnection()
 
 exports.incluiUsuario = async (dados) => {
   const client = await pool.connect()
