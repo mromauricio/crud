@@ -207,7 +207,7 @@ function preencheFormulario (usuario) {
     inputSenha.value = usuario[0].password
     btnAlterar.removeAttribute('disabled')
     btnAlterar.setAttribute('class', 'btn btn-outline-primary')
-    idUsuarioAlteracao = usuario[0].id
+    idUsuarioAlteracao = usuario[0].id || usuario[0]._id //Postgres ou MongoDB
   }
 }
 

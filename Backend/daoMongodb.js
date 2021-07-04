@@ -1,12 +1,12 @@
 //? MONGODB ATLAS - CLOUD NOSQL 
 require('dotenv').config()
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const uri = process.env.mongoDbUri
 
-mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true, useCreateIndex: true});
+mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true, useCreateIndex: true})
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', function() {console.log("Successful connection on MongoDB");});
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+db.once('connected', function() {console.log("Successful connection on MongoDB")})
 const usuarios = db.collection('usuarios')
 const Schema = mongoose.Schema;
 
@@ -18,7 +18,6 @@ const Usuario = mongoose.model('Usuario', Schema({
 }));
 
 exports.incluiUsuario = async (dados) => {
-  mongoose.connection
   const usuario = new Usuario({name: dados.nome, phone: dados.telefone, email: dados.email, password: dados.senha});
   try {
     await usuario.save()
@@ -28,7 +27,6 @@ exports.incluiUsuario = async (dados) => {
     console.log(error)
     return false
   } finally {
-    mongoose.connection.close()
   }
 }
 
@@ -56,5 +54,25 @@ exports.listaUsuariosFiltro = async (nome, email, tel) => {
   }
   finally {
     return resultado
+  }
+}
+
+exports.alteraUsuario = async (dados, idUsuario) => {
+  try {
+    const filter = { _id: new mongoose.Types.ObjectId(idUsuario) };
+    const options = { upsert: false };
+    const updateDoc = {
+      $set: {
+        name: dados.nome,
+        phone: dados.telefone, 
+        email: dados.email,
+        password: dados.senha
+      },
+    };
+    const result = await usuarios.updateOne(filter, updateDoc, options);
+    if (result.modifiedCount === 1) {
+      return true
+    }
+  } finally {
   }
 }
