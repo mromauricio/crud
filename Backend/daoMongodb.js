@@ -32,15 +32,6 @@ exports.incluiUsuario = async (dados) => {
   }
 }
 
-
-function diacriticSensitiveRegex(string = '') {
-  return string.replace(/a/g, '[ã,á,à,ä]')
-     .replace(/e/g, '[e,é,ë]')
-     .replace(/i/g, '[i,í,ï]')
-     .replace(/o/g, '[o,ó,ö,ò]')
-     .replace(/u/g, '[u,ü,ú,ù]');
-}
-
 usuarios.createIndex( { name: "text" } )
 
 //! Lembrar de tirar replace do SERVICE
