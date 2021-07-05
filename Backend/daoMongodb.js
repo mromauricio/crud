@@ -26,8 +26,7 @@ exports.incluiUsuario = async (dados) => {
   catch (error) {
     console.log(error)
     return false
-  } finally {
-  }
+  } 
 }
 
 usuarios.createIndex( { name: "text" } )
@@ -73,6 +72,8 @@ exports.alteraUsuario = async (dados, idUsuario) => {
     if (result.modifiedCount === 1) {
       return true
     }
-  } finally {
+  } catch (error) {
+    console.log(error)
+    return false
   }
 }
