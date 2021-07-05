@@ -1,4 +1,3 @@
-
 toastr.options = {
   "closeButton": false,
   "debug": false,
@@ -21,7 +20,7 @@ $(document).ready(function () {
   $('#telefone').mask('(00) 00000-0000', {reverse: false});
 });
 
-let idUsuarioAlteracao = 0;
+let idUsuario = 0;
 
 const btnIncluir = document.querySelector("#botao")
 btnIncluir.addEventListener('click', () => verificaTudoAntesDeEnviar())
@@ -207,7 +206,7 @@ function preencheFormulario (usuario) {
     inputSenha.value = usuario[0].password
     btnAlterar.removeAttribute('disabled')
     btnAlterar.setAttribute('class', 'btn btn-outline-primary')
-    idUsuarioAlteracao = usuario[0].id || usuario[0]._id //Postgres ou MongoDB
+    idUsuario = usuario[0].id || usuario[0]._id //Postgres ou MongoDB
   }
 }
 
@@ -218,7 +217,7 @@ function alteraUsuarioCadastrado (nome, email, telefone, senha) {
     "email": inputEmail.value,
     "senha": inputSenha.value
   }
-  axios.put(`http://localhost:3001/usuarios/${idUsuarioAlteracao}` , usuarioPayload)
+  axios.put(`http://localhost:3001/usuarios/${idUsuario}` , usuarioPayload)
   .then(response => {
     if (response.status === 200) {
       toastr["success"]("Dados alterados com sucesso!")
