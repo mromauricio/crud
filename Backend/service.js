@@ -1,4 +1,4 @@
-const dao = require('./dao.js')
+const dao = require('./dao.js')  //? Exclusivo para PostgreSQL
 // const dao = require('./daoMongodb.js') //? Exclusivo para MongoDB
 
 exports.insereUsuario = async (conteudoBody) => {

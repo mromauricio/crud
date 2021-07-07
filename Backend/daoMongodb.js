@@ -71,6 +71,24 @@ exports.alteraUsuario = async (dados, idUsuario) => {
     const result = await usuarios.updateOne(filter, updateDoc, options);
     if (result.modifiedCount === 1) {
       return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+exports.apagaUsuario = async (idUsuario) => {
+  try {
+    const filter = { _id: new mongoose.Types.ObjectId(idUsuario) };
+    const result = await usuarios.deleteOne(filter);
+    console.log(result)
+    if (result.deletedCount === 1) {
+      return true
+    } else {
+      return false
     }
   } catch (error) {
     console.log(error)
