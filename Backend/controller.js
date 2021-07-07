@@ -28,4 +28,12 @@ router.put('/usuarios/:codigo', async (req, res) => {
   }
 })
 
+router.delete('/usuarios/:codigo', async (req, res) => {
+  if ( await service.apagaUsuario(req.params.codigo) ) {
+    res.status(200).send()
+  } else {
+    res.status(500).send()
+  }
+})
+
 module.exports = router

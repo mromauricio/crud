@@ -31,6 +31,9 @@ btnListar.addEventListener('click', () => listaUsuariosCadastrados(inputNome.val
 const btnAlterar = document.querySelector("#alterar")
 btnAlterar.addEventListener('click', () => alteraUsuarioCadastrado(inputNome.value, inputEmail.value, inputTelefone.value, inputSenha.value))
 
+const btnApagar = document.querySelector("#apagar")
+btnApagar.addEventListener('click', () => apagaUsuarioCadastrado(idUsuario))
+
 
 const inputEmail = document.querySelector("#email")
 const labelEmail = document.querySelector("#label-email")
@@ -206,8 +209,22 @@ function preencheFormulario (usuario) {
     inputSenha.value = usuario[0].password
     btnAlterar.removeAttribute('disabled')
     btnAlterar.setAttribute('class', 'btn btn-outline-primary')
+    btnApagar.removeAttribute('disabled')
+    btnApagar.setAttribute('class', 'btn btn-outline-primary')
     idUsuario = usuario[0].id || usuario[0]._id //Postgres ou MongoDB
   }
+}
+
+function apagaUsuarioCadastrado (idUsuario) {
+  axios.delete(`http://localhost:3001/usuarios/${idUsuario}`)
+  .then(response => {
+    if (response.status === 200) {
+      toastr["success"]("Usuário apagado com sucesso!")
+      limpaFormulario()
+    } else {
+      toastr["error"]("Ooops! Algo deu errado!")
+    }
+  })
 }
 
 function alteraUsuarioCadastrado (nome, email, telefone, senha) {

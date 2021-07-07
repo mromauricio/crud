@@ -62,6 +62,25 @@ exports.alteraUsuario = async (dados, idUsuario) => {
   }
 }
 
+exports.apagaUsuario = async (idUsuario) => {
+  const client = await pool.connect()
+  const command = 'DELETE FROM usuario WHERE id=$1'
+  const values = [idUsuario]  
+  try {
+    const resultado = await client.query(command, values)
+    if (resultado.rowCount === 1) {
+      return true
+    } else return false
+  }
+  catch (error) {
+    console.log (error)
+    return false
+  }
+  finally {
+    client.release()
+  }
+}
+
 function minusculoSemAcento (texto) {
   return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
 }

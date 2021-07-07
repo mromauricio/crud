@@ -11,6 +11,10 @@ exports.alteraUsuario = async (conteudoBody, id) => {
     return await dao.alteraUsuario(conteudoBody, id)
 }
 
+exports.apagaUsuario = async (idUsuario) => {
+    return await dao.apagaUsuario(idUsuario)
+}
+
 exports.buscaUsuarios = async (nome, email, tel) => {
     nome =  nome.includes('*') ?  nome.replace(/\*/g,'%') : `%${nome}%`
     email =  email.includes('*') ?  email.replace(/\*/g,'%') : `%${email}%`
