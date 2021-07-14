@@ -135,14 +135,13 @@ function verificaTudoAntesDeEnviar() {
 
 function enviarDados() {
   const usuarioPayload = {
-    "nome": inputNome.value,
-    "telefone": inputTelefone.value,
+    "name": inputNome.value,
+    "phone": inputTelefone.value,
     "email": inputEmail.value,
-    "senha": inputSenha.value
+    "password": inputSenha.value
   }
   axios.post('http://localhost:3001/usuarios', usuarioPayload)
     .then(response => {
-    console.log(response.data)
     if (response.status === 201) {
       toastr["success"]("Dados salvos com sucesso!")
       limpaFormulario()
@@ -154,34 +153,8 @@ function enviarDados() {
   }) 
 }
 
-// function enviarDados() {
-//   const usuarioPayload = {
-//     "nome": inputNome.value,
-//     "telefone": inputTelefone.value,
-//     "email": inputEmail.value,
-//     "senha": inputSenha.value
-//   }
-//   fetch('http://localhost:3001/usuarios', 
-//     {
-//       method: 'POST',
-//       body: JSON.stringify(usuarioPayload),
-//       headers: {'Content-Type': 'application/json'},
-//     }
-//   ).then(response => {
-//     console.log(response)
-//     if (response.status === 201) {
-//       toastr["success"]("Dados salvos com sucesso!")
-//       limpaFormulario()
-//     } else {
-//       toastr["error"]("Ooops! Algo deu errado!")
-//     }
-//   }).catch((error) => {
-//     toastr["error"]("Ooops! Algo deu errado!")
-//   }) 
-// }
-
 function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone, exibeSomenteFormulario) {
-  axios.get(`http://localhost:3001/usuarios?nome=${inputNome}&email=${inputEmail}&tel=${inputTelefone}`)
+  axios.get(`http://localhost:3001/usuarios?s={"$and":[{"name": {"$contL": "${inputNome}"}},{"email": {"$contL": "${inputEmail}"}},{"phone": {"$cont": "${inputTelefone}"}}]}`)
     .then( response => {
       if (exibeSomenteFormulario) {
         preencheFormulario(response.data)
@@ -197,13 +170,14 @@ function listaUsuariosCadastrados(inputNome, inputEmail, inputTelefone, exibeSom
       }
     })
     .catch((error) => {
+      console.log(error)
       toastr["error"]("Ooops! Algo deu errado!")
     }) 
 }
 
-
 function preencheFormulario (usuario) {
   if (usuario.length === 1) {
+    inputEmail.value = usuario[0].email
     inputNome.value = usuario[0].name
     inputTelefone.value = usuario[0].phone
     inputSenha.value = usuario[0].password
@@ -229,10 +203,10 @@ function apagaUsuarioCadastrado (idUsuario) {
 
 function alteraUsuarioCadastrado (nome, email, telefone, senha) {
   const usuarioPayload = {
-    "nome": inputNome.value,
-    "telefone": inputTelefone.value,
+    "name": inputNome.value,
+    "phone": inputTelefone.value,
     "email": inputEmail.value,
-    "senha": inputSenha.value
+    "password": inputSenha.value
   }
   axios.put(`http://localhost:3001/usuarios/${idUsuario}` , usuarioPayload)
   .then(response => {
@@ -244,26 +218,13 @@ function alteraUsuarioCadastrado (nome, email, telefone, senha) {
     }
   })
 }
-// function listaUsuariosCadastrados() {
-//   fetch('http://localhost:3001/usuarios')
-//     .then(response => response.json())
-//     .then(dado => {
-//       montarTabela(dado)
-//     })
-//     .catch((error) => {
-//       toastr["error"]("Ooops! Algo deu errado!")
-//     }) 
-// }
 
 const table = document.querySelector('table')
 
 function montarTabela(dado) {
-
-  document.querySelector('tbody')?.remove()  //! FALAR SOBRE " ? "
+  document.querySelector('tbody')?.remove() 
   const tbody = document.createElement('tbody')
   table.appendChild(tbody)
-
-
   for (i = 0; i < dado.length; i++) {
     const tr = document.createElement('tr')
     if ( i%2 !== 0 ){
@@ -283,10 +244,5 @@ function montarTabela(dado) {
     tr.appendChild(td)
     tr.appendChild(td1)
     tr.appendChild(td2)
-    // <tbody>
-    //   <tr>
-    //     <td>
-    //     <td1>
-    //     <td2>
   }
 }
