@@ -1,5 +1,5 @@
-const dao = require('./dao.js')  //? Exclusivo para PostgreSQL
-// const dao = require('./daoMongodb.js') //? Exclusivo para MongoDB
+ const dao = require('./dao.js')  //? Exclusivo para PostgreSQL
+//const dao = require('./daoMongodb.js') //? Exclusivo para MongoDB
 
 exports.insereUsuario = async (conteudoBody) => {
     conteudoBody.email = conteudoBody.email.toLowerCase() 
@@ -24,8 +24,8 @@ exports.buscaUsuarios = async (nome, email, tel) => {
 
 //? Exclusivo para MongoDB
 // exports.buscaUsuarios = async (nome, email, tel) => {
-//     return await dao.listaUsuariosFiltro(nome, email, tel)
-// }
+//    return await dao.listaUsuariosFiltro(nome, email, tel)
+//}
 
 
 
